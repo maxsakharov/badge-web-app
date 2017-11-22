@@ -1,19 +1,32 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux'
+import { showBadgeUploadForm } from './actions/actions';
+import BadgeUploadForm from './components/badge-upload-form'
 import './App.css';
 
-class App extends Component {
+class AppUI extends Component {
   render() {
     return (
       <div className="App">
         <header className="App-header">
-          <h1 className="App-title">Manage your badges!</h1>
+          <h1 className="App-title">Manage your badges</h1>
         </header>
-        <p className="App-intro">
-          Some awesome content goes here
-        </p>
+        <div className="navigation">
+          <button type="button" className="button" onClick={this.props.openBadgeUploadForm}>Upload badge</button>
+        </div>
+        <BadgeUploadForm />
       </div>
     );
   }
 }
 
-export default App;
+const mapDispatchToProps = (dispatch) => {
+  return { 
+    openBadgeUploadForm: () => dispatch(showBadgeUploadForm()),
+  }
+}
+
+export default connect(
+  null,
+  mapDispatchToProps,
+)(AppUI);
