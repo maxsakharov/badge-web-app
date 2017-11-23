@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import { showBadgeUploadForm } from './actions/actions';
-import BadgeUploadForm from './components/badge-upload-form'
+import { showBadgeUploadForm, showParkingMap } from './actions/actions';
+import BadgeUploadForm from './components/badge-upload-form';
+import ParkingMap from './components/parking-map';
 import './App.css';
 
 class AppUI extends Component {
@@ -15,6 +16,10 @@ class AppUI extends Component {
           <button type="button" className="button" onClick={this.props.openBadgeUploadForm}>Upload badge</button>
         </div>
         <BadgeUploadForm />
+        <div className="navigation">
+          <button type="button" className="button" onClick={this.props.openParkingMap}>Search parking</button>
+        </div>
+        <ParkingMap />
       </div>
     );
   }
@@ -23,6 +28,7 @@ class AppUI extends Component {
 const mapDispatchToProps = (dispatch) => {
   return { 
     openBadgeUploadForm: () => dispatch(showBadgeUploadForm()),
+    openParkingMap: () => dispatch(showParkingMap()),
   }
 }
 

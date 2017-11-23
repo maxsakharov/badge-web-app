@@ -1,5 +1,5 @@
 export const SHOW_BADGE_UPLOAD_FORM = 'SHOW_BADGE_UPLOAD_FORM';
-export const HIDE_BADGE_UPLOAD_FORM = 'HIDE_BADGE_UPLOAD_FORM';
+export const SHOW_PARKING_MAP = 'SHOW_PARKING_MAP';
 
 export function showBadgeUploadForm() {
   return {
@@ -7,8 +7,8 @@ export function showBadgeUploadForm() {
   }
 }
 
-export function hideBadgeUploadForm() {
+export function showParkingMap() {
   return {
-    type: HIDE_BADGE_UPLOAD_FORM,
+    type: SHOW_PARKING_MAP,
   }
 }
