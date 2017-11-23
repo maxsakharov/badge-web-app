@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { showBadgeUploadForm } from './actions/actions';
 import BadgeUploadForm from './components/badge-upload-form'
+import 'typeface-roboto';
 import './App.css';
+
 
 class AppUI extends Component {
   render() {
