@@ -23,7 +23,7 @@ const PARKING_API_RESPONSE = [
     address: 'Address: 2700 Colorado Ave, Santa Monica, CA 90404',
     spacesAvailable: 100,
     price: 30,
-    photo: 'https://media.istockphoto.com/photos/material-world-massive-parking-lot-picture-id172165773'    
+    photo: 'https://media.istockphoto.com/photos/material-world-massive-parking-lot-picture-id172165773'
   }
 ];
 
@@ -87,7 +87,7 @@ class ParkingInfoLayer extends Component {
         position={{ lat: marker.latitude, lng: marker.longitude }}
         onClick={() => this.onMarkerClick(marker)}
       >
-        {  
+        {
           selectedMarker && selectedMarker.id === marker.id &&
             <InfoWindow onCloseClick={() => this.closeTooltip()}>
               <div>

@@ -16,9 +16,9 @@ class BadgeUploadFormUI extends Component {
     const reader = new FileReader();
     const file = e.target.files && e.target.files[0];
     if (file) {
-      reader.onloadend = (upload) => { 
+      reader.onloadend = (upload) => {
         this.setState({
-          file: upload.target.result, 
+          file: upload.target.result,
         })
         this.uploadFile();
       };

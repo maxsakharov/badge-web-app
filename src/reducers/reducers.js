@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import { SHOW_BADGE_UPLOAD_FORM, SHOW_PARKING_MAP } from '../actions/actions';
+import { SHOW_BADGES_LIST, SHOW_BADGE_UPLOAD_FORM, SHOW_PARKING_MAP } from '../actions/actions';
 
 const defaultState = {
   screen: '',
@@ -7,6 +7,11 @@ const defaultState = {
 
 function app(state = defaultState, action = {}) {
   switch (action.type) {
+    case SHOW_BADGES_LIST:
+      return {
+        ...state,
+        screen: 'BADGES_LIST'
+      }
     case SHOW_BADGE_UPLOAD_FORM:
         return {
             ...state,

@@ -1,10 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux'
 import { withStyles } from 'material-ui/styles';
 import BottomNavigation, { BottomNavigationButton } from 'material-ui/BottomNavigation';
 import Receipt from 'material-ui-icons/Receipt';
 import LocalParking from 'material-ui-icons/LocalParking';
 import Scanner from 'material-ui-icons/Scanner';
+import { showBadgesList, showBadgeUploadForm, showParkingMap } from '../actions/actions';
 
 const styles = theme => ({
   root: {
@@ -20,7 +22,7 @@ class AppBottomNavigation extends React.Component {
   };
 
   state = {
-    value: 0,
+    value: -1,
   };
 
   handleChange = (event, value) => {
@@ -28,7 +30,7 @@ class AppBottomNavigation extends React.Component {
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, openBadgesList, openParkingMap, openBadgeUploadForm } = this.props;
     const { value } = this.state;
 
     return (
@@ -38,12 +40,23 @@ class AppBottomNavigation extends React.Component {
         className={classes.root}
         showLabels
       >
-        <BottomNavigationButton label="Parking Tickets" icon={<Receipt />} />
-        <BottomNavigationButton label="Search Parking" icon={<LocalParking />} />
-        <BottomNavigationButton label="Ticket Scan" icon={<Scanner />} />
+        <BottomNavigationButton label="Parking Tickets" icon={<Receipt />} onClick={openBadgesList} />
+        <BottomNavigationButton label="Search Parking" icon={<LocalParking />} onClick={openParkingMap} />
+        <BottomNavigationButton label="Ticket Scan" icon={<Scanner />} onClick={openBadgeUploadForm} />
       </BottomNavigation>
     );
   }
 }
 
-export default withStyles(styles)(AppBottomNavigation);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    openBadgesList: () => dispatch(showBadgesList()),
+    openBadgeUploadForm: () => dispatch(showBadgeUploadForm()),
+    openParkingMap: () => dispatch(showParkingMap()),
+  }
+}
+
+export default connect(
+  null,
+  mapDispatchToProps,
+)(withStyles(styles)(AppBottomNavigation));
