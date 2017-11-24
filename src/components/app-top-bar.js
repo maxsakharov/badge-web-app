@@ -11,7 +11,7 @@ const styles = theme => ({
   },
   flex: {
     flex: 1,
-  },  
+  },
 });
 
 function AppTopBar(props) {

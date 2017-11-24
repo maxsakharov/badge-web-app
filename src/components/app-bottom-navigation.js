@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 import { withStyles } from 'material-ui/styles';
 import BottomNavigation, { BottomNavigationButton } from 'material-ui/BottomNavigation';
 import Receipt from 'material-ui-icons/Receipt';
@@ -19,6 +19,9 @@ const styles = theme => ({
 class AppBottomNavigation extends React.Component {
   static propTypes = {
     classes: PropTypes.object.isRequired,
+    openBadgesList: PropTypes.func.isRequired,
+    openParkingMap: PropTypes.func.isRequired,
+    openBadgeUploadForm: PropTypes.func.isRequired,
   };
 
   state = {
@@ -48,15 +51,13 @@ class AppBottomNavigation extends React.Component {
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    openBadgesList: () => dispatch(showBadgesList()),
-    openBadgeUploadForm: () => dispatch(showBadgeUploadForm()),
-    openParkingMap: () => dispatch(showParkingMap()),
-  }
-}
+const mapDispatchToProps = dispatch => ({
+  openBadgesList: () => dispatch(showBadgesList()),
+  openBadgeUploadForm: () => dispatch(showBadgeUploadForm()),
+  openParkingMap: () => dispatch(showParkingMap()),
+});
 
 export default connect(
   null,
-  mapDispatchToProps,
+  mapDispatchToProps
 )(withStyles(styles)(AppBottomNavigation));

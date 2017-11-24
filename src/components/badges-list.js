@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withStyles } from 'material-ui/styles';
 
@@ -14,14 +15,19 @@ class BadgesList extends Component {
       <div>Manage your badges</div>
     );
   }
-};
-
-const mapStateToProps = state => {
-  return {
-    isOpen: state.app.screen === 'BADGES_LIST',
-  }
 }
 
-export default connect(
-  mapStateToProps,
-)(withStyles(styles)(BadgesList));
+BadgesList.propTypes = {
+  isOpen: PropTypes.bool,
+};
+
+BadgesList.defaultProps = {
+  isOpen: false,
+};
+
+
+const mapStateToProps = state => ({
+  isOpen: state.app.screen === 'BADGES_LIST',
+});
+
+export default connect(mapStateToProps)(withStyles(styles)(BadgesList));

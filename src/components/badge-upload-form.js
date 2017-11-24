@@ -1,8 +1,17 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux'
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import './badge-upload-form.css';
 
 class BadgeUploadFormUI extends Component {
+  static propTypes = {
+    isOpen: PropTypes.bool,
+  }
+
+  static defaultProps = {
+    isOpen: false,
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -16,25 +25,22 @@ class BadgeUploadFormUI extends Component {
     const reader = new FileReader();
     const file = e.target.files && e.target.files[0];
     if (file) {
-      reader.onloadend = (upload) => {
-        this.setState({
-          file: upload.target.result,
-        })
-        this.uploadFile();
-      };
+      reader.onloadend = upload => this.setState({
+        file: upload.target.result,
+      }, this.uploadFile);
       reader.readAsDataURL(file);
     }
   }
 
   uploadFile() {
     const formData = new FormData();
-    formData.append("badge", this.state.file);
+    formData.append('badge', this.state.file);
     fetch('http://localhost/badge/', {
       method: 'POST',
       headers: {
         'Content-Type': 'multipart/form-data',
-        'Accept': 'application/json',
-        'type': 'formData',
+        Accept: 'application/json',
+        type: 'formData',
       },
       body: formData,
     }).then((response) => {
@@ -59,17 +65,13 @@ class BadgeUploadFormUI extends Component {
         <input type="file" onChange={e => this.selectFile(e)} />
         <img className="image-preview" src={file} />
       </div>
-    )
+    );
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    isOpen: state.app.screen === 'BADGE_UPLOAD_FORM',
-  }
-}
+const mapStateToProps = state => ({
+  isOpen: state.app.screen === 'BADGE_UPLOAD_FORM',
+});
 
-export default connect(
-  mapStateToProps,
-)(BadgeUploadFormUI);
+export default connect(mapStateToProps)(BadgeUploadFormUI);
 
