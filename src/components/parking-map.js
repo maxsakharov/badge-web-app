@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import { compose, withProps } from 'recompose';
 import { withScriptjs, withGoogleMap, GoogleMap, Marker, InfoWindow, TrafficLayer } from 'react-google-maps';
 import './parking-map.css';
@@ -112,15 +111,7 @@ class ParkingInfoLayer extends Component {
   }
 }
 
-class ParkingMapUI extends Component {
-  static propTypes = {
-    isOpen: PropTypes.bool,
-  }
-
-  static defaultProps = {
-    isOpen: false,
-  }
-
+export default class ParkingMap extends Component {
   state = {
     markers: [],
   }
@@ -137,22 +128,11 @@ class ParkingMapUI extends Component {
   }
 
   render() {
-    const { isOpen } = this.props;
     const { markers } = this.state;
-
-    if (!isOpen) {
-      return null;
-    }
 
     return (
       <GoogleMapHoc markers={markers} />
     );
   }
 }
-
-const mapStateToProps = state => ({
-  isOpen: state.app.screen === 'PARKING_MAP',
-});
-
-export default connect(mapStateToProps)(ParkingMapUI);
 

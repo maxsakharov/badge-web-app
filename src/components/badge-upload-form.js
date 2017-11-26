@@ -1,17 +1,7 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import './badge-upload-form.css';
 
-class BadgeUploadFormUI extends Component {
-  static propTypes = {
-    isOpen: PropTypes.bool,
-  }
-
-  static defaultProps = {
-    isOpen: false,
-  }
-
+export default class BadgeUploadForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -53,12 +43,7 @@ class BadgeUploadFormUI extends Component {
   }
 
   render() {
-    const { isOpen } = this.props;
     const { file } = this.state;
-
-    if (!isOpen) {
-      return null;
-    }
 
     return (
       <div className="badge-upload-form">
@@ -68,10 +53,3 @@ class BadgeUploadFormUI extends Component {
     );
   }
 }
-
-const mapStateToProps = state => ({
-  isOpen: state.app.screen === 'BADGE_UPLOAD_FORM',
-});
-
-export default connect(mapStateToProps)(BadgeUploadFormUI);
-
