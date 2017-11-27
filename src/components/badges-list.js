@@ -23,10 +23,14 @@ const styles = theme => ({
 });
 
 const badgesMock = [
-  'home',
-  'work',
-  'beach',
-  'cafe',
+  {
+    id: 'default',
+    name: 'test',
+    lat: '51.5033640',
+    long: '-0.1276250',
+    location: 'https://s3.amazonaws.com/badge-files-dev/badge-image/default',
+    created_at: '2017-11-27T21:43:09.976Z',
+  },
 ];
 
 class BadgesList extends Component {
@@ -43,13 +47,15 @@ class BadgesList extends Component {
   }
 
   fetchBadges = () => {
-    fetch('//52.4.240.117:8080/badge')
+    fetch('http://52.4.240.117:8080/badge')
+      .then(response => response.json())
       .then((badges) => {
         this.setState({
           badges,
         });
       })
-      .catch(() => {
+      .catch((err) => {
+        console.err('err', err);
         this.setState({
           badges: badgesMock,
         });
@@ -63,14 +69,12 @@ class BadgesList extends Component {
       <div>
         <div>Manage your badges</div>
         {this.state.badges && this.state.badges.map(badge => (
-          <Card key={badge} className={classes.card}>
+          <Card key={badge.id} className={classes.card}>
             <CardContent>
               <Typography type="body1" className={classes.title}>
-                Parking pass
+                {badge.name}
               </Typography>
-              <Typography component="p">
-                {badge}
-              </Typography>
+              <img src={badge.location} width="358" />
             </CardContent>
             <CardActions>
               <Button dense>Display now</Button>
