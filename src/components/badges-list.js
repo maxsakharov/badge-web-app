@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Card, { CardActions, CardContent } from 'material-ui/Card';
-import Button from 'material-ui/Button';
-import Typography from 'material-ui/Typography';
+import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card';
+// import Button from 'material-ui/Button';
 import { withStyles } from 'material-ui/styles';
 
 const styles = theme => ({
@@ -10,6 +9,12 @@ const styles = theme => ({
     minWidth: 275,
     margin: 12,
     textAlign: 'left',
+  },
+  cardContent: {
+    // padding: 0,
+  },
+  cardActions: {
+    justifyContent: 'center',
   },
   title: {
     marginBottom: 16,
@@ -67,15 +72,14 @@ class BadgesList extends Component {
 
     return this.state.badges && this.state.badges.map(badge => (
       <Card key={badge.id} className={classes.card}>
-        <CardContent>
-          <Typography type="body1" className={classes.title}>
-            {badge.name}
-          </Typography>
-          <img src={badge.location} width="358" />
+        <CardContent className={classes.cardContent}>
+          <img src={badge.location} width="356" />
         </CardContent>
-        <CardActions>
-          <Button dense>Display now</Button>
-        </CardActions>
+        {
+        // <CardActions className={classes.cardActions}>
+        //   <Button dense>SHOW BADGE</Button>
+        // </CardActions>
+        }
       </Card>
     ));
   }

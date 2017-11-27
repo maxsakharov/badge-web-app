@@ -32,7 +32,7 @@ const Navigation = {
 
 const style = {
   content: {
-    top: '70px', bottom: '70px', position: 'fixed', width: '100%', overflowY: 'scroll',
+    top: '56px', bottom: '56px', position: 'fixed', width: '100%', overflowY: 'scroll',
   },
 };
 
