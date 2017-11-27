@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
+import 'isomorphic-fetch';
 import badgesApp from './reducers/reducers';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
