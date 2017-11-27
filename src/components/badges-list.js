@@ -65,24 +65,19 @@ class BadgesList extends Component {
   render() {
     const { classes } = this.props;
 
-    return (
-      <div>
-        <div>Manage your badges</div>
-        {this.state.badges && this.state.badges.map(badge => (
-          <Card key={badge.id} className={classes.card}>
-            <CardContent>
-              <Typography type="body1" className={classes.title}>
-                {badge.name}
-              </Typography>
-              <img src={badge.location} width="358" />
-            </CardContent>
-            <CardActions>
-              <Button dense>Display now</Button>
-            </CardActions>
-          </Card>
-        ))}
-      </div>
-    );
+    return this.state.badges && this.state.badges.map(badge => (
+      <Card key={badge.id} className={classes.card}>
+        <CardContent>
+          <Typography type="body1" className={classes.title}>
+            {badge.name}
+          </Typography>
+          <img src={badge.location} width="358" />
+        </CardContent>
+        <CardActions>
+          <Button dense>Display now</Button>
+        </CardActions>
+      </Card>
+    ));
   }
 }
 

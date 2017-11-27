@@ -25,7 +25,7 @@ const styles = theme => ({
 });
 
 function AppTopBar(props) {
-  const { classes, openHome } = props;
+  const { classes, openHome, title } = props;
 
   return (
     <div className={classes.root}>
@@ -35,7 +35,7 @@ function AppTopBar(props) {
             <HomeIcon color="inherit" />
           </IconButton>
           <Typography type="title" color="inherit" className={classes.title}>
-            Parking Concierge
+            {title}
           </Typography>
         </Toolbar>
       </AppBar>
@@ -46,6 +46,11 @@ function AppTopBar(props) {
 AppTopBar.propTypes = {
   classes: PropTypes.object.isRequired,
   openHome: PropTypes.func.isRequired,
+  title: PropTypes.string,
+};
+
+AppTopBar.defaultProps = {
+  title: 'Parking Concierge',
 };
 
 const mapDispatchToProps = dispatch => ({

@@ -13,10 +13,12 @@ const Navigation = {
   HOME: {
     id: 'HOME',
     navigationId: -1,
+    title: 'Parking Concierge',
   },
   BADGES_LIST: {
     id: 'BADGES_LIST',
     navigationId: 0,
+    title: 'Manage your badges',
   },
   PARKING_MAP: {
     id: 'PARKING_MAP',
@@ -77,14 +79,12 @@ class AppUI extends Component {
 
   render() {
     const { screen } = this.props;
-    let navigationId = Navigation[screen] && Navigation[screen].navigationId;
-    if (navigationId == null) {
-      navigationId = -1;
-    }
+    const screenInfo = Navigation[screen] || Navigation.HOME;
+    const { title, navigationId } = screenInfo;
 
     return (
       <div className="App">
-        <AppBar />
+        <AppBar title={title} />
         <Container>
           <Screen name={this.props.screen} />
         </Container>
