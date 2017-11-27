@@ -18,28 +18,19 @@ const styles = theme => ({
 
 class AppBottomNavigation extends React.Component {
   static propTypes = {
+    navigationId: PropTypes.number.isRequired,
     classes: PropTypes.object.isRequired,
     openBadgesList: PropTypes.func.isRequired,
     openParkingMap: PropTypes.func.isRequired,
     openBadgeUploadForm: PropTypes.func.isRequired,
   };
 
-  state = {
-    value: -1,
-  };
-
-  handleChange = (event, value) => {
-    this.setState({ value });
-  };
-
   render() {
-    const { classes, openBadgesList, openParkingMap, openBadgeUploadForm } = this.props;
-    const { value } = this.state;
+    const { navigationId, classes, openBadgesList, openParkingMap, openBadgeUploadForm } = this.props;
 
     return (
       <BottomNavigation
-        value={value}
-        onChange={this.handleChange}
+        value={navigationId}
         className={classes.root}
         showLabels
       >

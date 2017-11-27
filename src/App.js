@@ -9,6 +9,25 @@ import AppBar from './components/app-top-bar';
 import BottomNavigation from './components/app-bottom-navigation';
 import './App.css';
 
+const Navigation = {
+  HOME: {
+    id: 'HOME',
+    navigationId: -1,
+  },
+  BADGES_LIST: {
+    id: 'BADGES_LIST',
+    navigationId: 0,
+  },
+  PARKING_MAP: {
+    id: 'PARKING_MAP',
+    navigationId: 1,
+  },
+  BADGE_UPLOAD_FORM: {
+    id: 'BADGE_UPLOAD_FORM',
+    navigationId: 2,
+  },
+};
+
 const style = {
   content: {
     top: '70px', bottom: '70px', position: 'fixed', width: '100%', overflowY: 'scroll',
@@ -32,11 +51,11 @@ Container.propTypes = {
 
 function Screen({ name }) {
   switch (name) {
-    case 'BADGES_LIST':
+    case Navigation.BADGES_LIST.id:
       return <BadgesList />;
-    case 'BADGE_UPLOAD_FORM':
+    case Navigation.BADGE_UPLOAD_FORM.id:
       return <BadgeUploadForm />;
-    case 'PARKING_MAP':
+    case Navigation.PARKING_MAP.id:
       return <ParkingMap />;
     default:
       return <div />;
@@ -57,13 +76,19 @@ class AppUI extends Component {
   }
 
   render() {
+    const { screen } = this.props;
+    let navigationId = Navigation[screen] && Navigation[screen].navigationId;
+    if (navigationId == null) {
+      navigationId = -1;
+    }
+
     return (
       <div className="App">
         <AppBar />
         <Container>
           <Screen name={this.props.screen} />
         </Container>
-        <BottomNavigation />
+        <BottomNavigation navigationId={navigationId} />
       </div>
     );
   }
