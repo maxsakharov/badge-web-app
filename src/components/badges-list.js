@@ -22,7 +22,7 @@ const styles = theme => ({
   },
 });
 
-const badges = [
+const badgesMock = [
   'home',
   'work',
   'beach',
@@ -43,9 +43,17 @@ class BadgesList extends Component {
   }
 
   fetchBadges = () => {
-    this.setState({
-      badges,
-    });
+    fetch('//52.4.240.117:8080/badge')
+      .then((badges) => {
+        this.setState({
+          badges,
+        });
+      })
+      .catch(() => {
+        this.setState({
+          badges: badgesMock,
+        });
+      });
   }
 
   render() {
