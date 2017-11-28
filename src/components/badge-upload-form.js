@@ -123,7 +123,7 @@ class BadgeUploadForm extends Component {
               id="raised-button-file"
               component="label"
               color="primary"
-              label="Ticket"
+              label="Permit"
               onClick={fileSrc ? this.uploadFile : () => {}}
             >
               {[
@@ -139,7 +139,7 @@ class BadgeUploadForm extends Component {
               id="raised-button-file"
               component="label"
               color="primary"
-              label="Ticket"
+              label="Permit"
               onClick={fileSrc ? this.uploadFile : () => {}}
             >
               {fileSrc
@@ -150,11 +150,11 @@ class BadgeUploadForm extends Component {
                       <Autorenew key="icon" className={classes.rightIcon} />,
                     ]
                     : [
-                      <span key="label">Upload Ticket</span>,
+                      <span key="label">Upload Permit</span>,
                       <FileUpload key="icon" className={classes.rightIcon} />,
                     ]
                 : [
-                  <span key="label">Select Ticket</span>,
+                  <span key="label">Select Permit</span>,
                   <Camera key="icon" className={classes.rightIcon} />,
                   <input
                     key="file"
