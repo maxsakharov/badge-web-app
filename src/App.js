@@ -16,7 +16,7 @@ const Navigation = {
   HOME: {
     id: 'HOME',
     navigationId: -1,
-    title: 'Chatbot',
+    title: 'Rhonda',
   },
   BADGES_LIST: {
     id: 'BADGES_LIST',
