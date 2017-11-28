@@ -224,7 +224,7 @@ export default class ParkingMap extends Component {
   }
 
   fetchLocationData = (location) => {
-    fetch(`//maps.googleapis.com/maps/api/geocode/json?address=${location}`)
+    fetch(`http://maps.googleapis.com/maps/api/geocode/json?address=${location}`)
       .then(response => response.json()
         .then((json) => {
           if (json && json.results && json.results.length && json.results[0].geometry && json.results[0].geometry.location) {
