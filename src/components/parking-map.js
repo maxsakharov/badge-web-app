@@ -1,34 +1,30 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import TextField from 'material-ui/TextField';
+import Button from 'material-ui/Button';
 import { compose, withProps } from 'recompose';
-import { withScriptjs, withGoogleMap, GoogleMap, Marker, InfoWindow, TrafficLayer } from 'react-google-maps';
+import { withScriptjs, withGoogleMap, GoogleMap, Marker, TrafficLayer } from 'react-google-maps';
 import './parking-map.css';
-
-const PARKING_API_RESPONSE = [
-  {
-    id: 0,
-    name: 'Parking #1',
-    latitude: 34.022212,
-    longitude: -118.494475,
-    address: 'Address: 1100 Colorado Ave, Santa Monica, CA 90404',
-    spacesAvailable: 10,
-    price: 15,
-    photo: 'https://media.istockphoto.com/photos/material-world-massive-parking-lot-picture-id172165773',
-  },
-  {
-    id: 1,
-    name: 'Parking #2',
-    latitude: 34.026212,
-    longitude: -118.497000,
-    address: 'Address: 2700 Colorado Ave, Santa Monica, CA 90404',
-    spacesAvailable: 100,
-    price: 30,
-    photo: 'https://media.istockphoto.com/photos/material-world-massive-parking-lot-picture-id172165773',
-  },
-];
 
 function formatPrice(price) {
   return price && price.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+}
+
+function deg2rad(deg) {
+  return deg * (Math.PI/180);
+}
+
+function getDistanceFromLatLonInMi(lat1, lon1, lat2, lon2) {
+  const R = 3959; // Radius of the earth in km
+  const dLat = deg2rad(lat2-lat1);  // deg2rad below
+  const dLon = deg2rad(lon2-lon1); 
+  const a = 
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+    Math.sin(dLon/2) * Math.sin(dLon/2); 
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+  const d = R * c; // Distance in km
+  return d;
 }
 
 const GoogleMapHoc = compose(
@@ -43,60 +39,50 @@ const GoogleMapHoc = compose(
 )(props => (
   <GoogleMap
     defaultZoom={15}
-    defaultCenter={{ lat: 34.024212, lng: -118.496475 }}
+    center={{ lat: props.coordinates.latitude, lng: props.coordinates.longitude }}
   >
     <TrafficLayer autoUpdate />
-    <ParkingInfoLayer markers={props.markers} />
+    <ParkingInfoLayer markers={props.markers} onParkingSelect={props.onParkingSelect} />
   </GoogleMap>
 ));
 
 class ParkingInfoLayer extends Component {
   static propTypes = {
     markers: PropTypes.arrayOf(PropTypes.object),
+    onParkingSelect: PropTypes.func,
   }
 
   static defaultProps = {
     markers: [],
-  }
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      selectedMarker: null,
-    };
+    onParkingSelect: null,
   }
 
   onMarkerClick(marker) {
-    const { selectedMarker } = this.state;
-    if (selectedMarker && selectedMarker === marker) {
-      // no need to re-render
-      return;
+    const { onParkingSelect } = this.props;
+    if (onParkingSelect) {
+      onParkingSelect(marker);
     }
-
-    this.setState({
-      selectedMarker: marker,
-    });
   }
 
+  /**
   closeTooltip() {
     this.setState({
       selectedMarker: null,
     });
   }
+  */
 
   render() {
     const { markers } = this.props;
-    const { selectedMarker } = this.state;
+
     return markers.map(marker => (
       <Marker
-        key={`marker.${marker.id}`}
-        label={marker.price && formatPrice(marker.price)}
-        position={{ lat: marker.latitude, lng: marker.longitude }}
+        key={`marker.${marker.properties.ID}`}
+        position={{ lat: marker.properties.Lat, lng: marker.properties.Lon }}
         onClick={() => this.onMarkerClick(marker)}
       >
-        {
-          selectedMarker && selectedMarker.id === marker.id &&
+        {/*
+          selectedMarker && selectedMarker.properties.ID === marker.properties.ID &&
             <InfoWindow onCloseClick={() => this.closeTooltip()}>
               <div>
                 <p>Parking Address: {selectedMarker.address}</p>
@@ -105,7 +91,7 @@ class ParkingInfoLayer extends Component {
                 <img src={selectedMarker.photo} alt="Parking" />
               </div>
             </InfoWindow>
-        }
+        */}
       </Marker>
     ));
   }
@@ -114,25 +100,118 @@ class ParkingInfoLayer extends Component {
 export default class ParkingMap extends Component {
   state = {
     markers: [],
+    coordinates: {
+      latitude: 34.0522,
+      longitude: -118.2437,
+    },
+    selectedMarker: null,
+    reservedMarker: null,
   }
 
-  componentDidMount() {
-    this.fetchParkingDate();
+  onSearchFieldChange = (e) => {
+    e.preventDefault();
+
+    const value = e.target.elements['map-input-field'].value;
+    fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${value}`)
+      .then(response => response.json()
+        .then((json) => {
+          if (json && json.results && json.results.length && json.results[0].geometry && json.results[0].geometry.location) {
+            const location = json.results[0].geometry.location;
+            this.setState({
+              coordinates: {
+                latitude: location.lat,
+                longitude: location.lng,
+              },
+            });
+            this.fetchParkingData();
+          }
+        }));
   }
 
-  fetchParkingDate = () => {
-    // TODO call real API here
+  getDailyRate = (marker) => {
+    if (marker.properties.HourlyCost === 'See rates under Special Features') {
+      return marker.properties.SpecialFeatures;
+    }
+    return marker.properties.HourlyCost;
+  }
+
+  fetchParkingData = () => {
+    fetch('http://geohub.lacity.org/datasets/be7c8c4ab95b4d82af18255ad1a3212c_2.geojson')
+      .then(response => response.json()
+        .then((json) => {
+          console.log(json);
+          const { coordinates } = this.state;
+          if (json && json.features && json.features.length) {
+            const { features } = json;
+            const closeParkings = features.filter((feature) => {
+              const coord = feature.geometry.coordinates;
+              return getDistanceFromLatLonInMi(coord[1], coord[0], coordinates.latitude, coordinates.longitude) <= 2;
+            });
+            this.setState({
+              markers: closeParkings,
+            });
+            console.log(closeParkings);
+          }
+        }));
+  }
+
+  selectParking = (marker) => {
+    const { selectedMarker } = this.state;
+    // To avoid re-rendering when same marker is selected
+    if (selectedMarker && selectedMarker === marker) {
+      return;
+    }
+
     this.setState({
-      markers: PARKING_API_RESPONSE,
+      selectedMarker: marker,
+    });
+  }
+
+  reserveParking = (marker) => {
+    this.setState({
+      reservedMarker: marker,
+    });
+  }
+
+  startOver = () => {
+    this.setState({
+      markers: [],
+      selectedMarker: null,
+      reservedMarker: null,
     });
   }
 
   render() {
-    const { markers } = this.state;
+    const { markers, coordinates, selectedMarker, reservedMarker } = this.state;
 
-    return (
-      <GoogleMapHoc markers={markers} />
-    );
+    return [coordinates && (
+      <div key="map-container" className="map-container">
+        <GoogleMapHoc coordinates={coordinates} markers={markers} onParkingSelect={this.selectParking} />
+      </div>
+      ),
+      (
+        <div key="map-info-container" className="map-info-container">
+          {reservedMarker &&
+            <div className="confirmation">
+              The parking is reserved! Have a nice day! :)
+            </div>
+          }
+          {!selectedMarker && !reservedMarker &&
+            <form key="map-form" onSubmit={this.onSearchFieldChange}>
+              <TextField id="map-input-field" className="map-input-field" key="map-input-field" placeholder="Search by city, venue, zip code" />
+            </form>
+          }
+          {selectedMarker && !reservedMarker &&
+            <div>
+              <p className="parking-rate">Rate: {this.getDailyRate(selectedMarker)}</p>
+              <p className="parking-address">{selectedMarker.properties.Address}, {selectedMarker.properties.City}, {selectedMarker.properties.State}, {selectedMarker.properties.Zipcode}</p>
+              <p><Button raised color="primary" onClick={() => this.reserveParking(selectedMarker)}>Reserve Parking</Button></p>
+              <p><Button raised onClick={() => this.startOver()}>Start Over</Button></p>
+            </div>
+          }
+        </div>
+      ),
+    ];
   }
 }
 
