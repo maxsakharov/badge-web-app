@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import { withStyles } from 'material-ui/styles';
 import BottomNavigation, { BottomNavigationButton } from 'material-ui/BottomNavigation';
 import Receipt from 'material-ui-icons/Receipt';
-import LocalParking from 'material-ui-icons/LocalParking';
-import Scanner from 'material-ui-icons/Scanner';
+import Search from 'material-ui-icons/Search';
+import Camera from 'material-ui-icons/Camera';
 import { showBadgesList, showBadgeUploadForm, showParkingMap } from '../actions/actions';
 
 const styles = theme => ({
@@ -34,9 +34,9 @@ class AppBottomNavigation extends React.Component {
         className={classes.root}
         showLabels
       >
-        <BottomNavigationButton label="Parking Tickets" icon={<Receipt />} onClick={openBadgesList} />
-        <BottomNavigationButton label="Search Parking" icon={<LocalParking />} onClick={openParkingMap} />
-        <BottomNavigationButton label="Ticket Scan" icon={<Scanner />} onClick={openBadgeUploadForm} />
+        <BottomNavigationButton label="Permits" icon={<Receipt />} onClick={openBadgesList} />
+        <BottomNavigationButton label="Search Parking" icon={<Search />} onClick={openParkingMap} />
+        <BottomNavigationButton label="Ticket Scan" icon={<Camera />} onClick={openBadgeUploadForm} />
       </BottomNavigation>
     );
   }
