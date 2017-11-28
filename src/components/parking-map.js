@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import TextField from 'material-ui/TextField';
+import Card, { CardContent } from 'material-ui/Card';
 import Button from 'material-ui/Button';
 import { compose, withProps } from 'recompose';
 import { withScriptjs, withGoogleMap, GoogleMap, Marker, TrafficLayer } from 'react-google-maps';
@@ -199,10 +200,12 @@ export default class ParkingMap extends Component {
       (
         <div key="map-info-container" className="map-info-container">
           {reservedMarker &&
-            <div className="confirmation">
-              <p>The parking is reserved! Have a nice day! :)</p>
-              <Button raised color="primary" target="_blank" href={this.getMapsUrl(reservedMarker)}>Navigate</Button>
-            </div>
+            <Card className="card">
+              <CardContent className="content">
+                <p className="confirmation">The parking is reserved! Have a nice day! :)</p>
+                <Button raised color="primary" target="_blank" href={this.getMapsUrl(reservedMarker)}>Navigate</Button>
+              </CardContent>
+            </Card>
           }
           {!selectedMarker && !reservedMarker &&
             <form key="map-form" onSubmit={this.onSearchFieldChange}>
@@ -210,12 +213,16 @@ export default class ParkingMap extends Component {
             </form>
           }
           {selectedMarker && !reservedMarker &&
-            <div>
-              <p className="parking-rate">Rate: {this.getDailyRate(selectedMarker)}</p>
-              <p className="parking-address">{selectedMarker.properties.Address}, {selectedMarker.properties.City}, {selectedMarker.properties.State}, {selectedMarker.properties.Zipcode}</p>
-              <p><Button raised color="primary" onClick={() => this.reserveParking(selectedMarker)}>Reserve Parking</Button></p>
-              <p><Button raised onClick={() => this.startOver()}>Start Over</Button></p>
-            </div>
+            <Card className="card">
+              <CardContent className="content">
+                <p className="parking-rate">Rate: {this.getDailyRate(selectedMarker)}</p>
+                <p className="parking-address">{selectedMarker.properties.Address}, {selectedMarker.properties.City}, {selectedMarker.properties.State}, {selectedMarker.properties.Zipcode}</p>
+                <p>
+                  <Button raised color="primary" className="cta" onClick={() => this.reserveParking(selectedMarker)}>Reserve Parking</Button>
+                  <Button raised className="cta" onClick={() => this.startOver()}>Start Over</Button>
+                </p>
+              </CardContent>
+            </Card>
           }
         </div>
       ),
