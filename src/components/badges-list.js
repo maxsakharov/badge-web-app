@@ -60,7 +60,7 @@ class BadgesList extends Component {
         });
       })
       .catch((err) => {
-        console.err('err', err);
+        console.error('error', err);
         this.setState({
           badges: badgesMock,
         });
