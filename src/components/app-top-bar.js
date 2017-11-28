@@ -15,7 +15,7 @@ const styles = theme => ({
   },
   title: {
     flex: 1,
-    marginRight: 40,
+    // marginRight: 40,
   },
   homeButton: {
     // color: 'rgba(0, 0, 0, 0.54)',

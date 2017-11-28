@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import 'typeface-roboto'; // eslint-disable-line import/extensions
+import Chatbot from './components/chatbot';
 import BadgesList from './components/badges-list';
 import BadgeUploadForm from './components/badge-upload-form';
 import ParkingMap from './components/parking-map';
@@ -15,7 +16,7 @@ const Navigation = {
   HOME: {
     id: 'HOME',
     navigationId: -1,
-    title: 'Parking Concierge',
+    title: 'Chatbot',
   },
   BADGES_LIST: {
     id: 'BADGES_LIST',
@@ -38,9 +39,17 @@ const style = {
   },
 };
 
-function Container({ children }) {
+function Container({ children, displayBottomNav }) {
+  const contentStyle = Object.assign(
+    {},
+    style.content,
+    {
+      bottom: displayBottomNav ? '56px' : '0px',
+    }
+  );
+
   return (
-    <div style={style.content}>
+    <div style={contentStyle}>
       {children}
     </div>
   );
@@ -51,19 +60,25 @@ Container.propTypes = {
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node,
   ]).isRequired,
+  displayBottomNav: PropTypes.bool,
+};
+
+Container.defaultProps = {
+  displayBottomNav: true,
 };
 
 function Screen({ name }) {
   switch (name) {
     case Navigation.BADGES_LIST.id:
       return <BadgesList />;
+    case Navigation.PARKING_MAP.id:
+      return <ParkingMap />;
     case Navigation.BADGE_UPLOAD_FORM.id:
       return <BadgeUploadForm />;
     case 'PARKING_RECEIPT':
       return <ParkingReceipt />;
-    case Navigation.PARKING_MAP.id:
     default:
-      return <ParkingMap />;
+      return <Chatbot />;
   }
 }
 
@@ -82,13 +97,13 @@ class AppUI extends Component {
 
   render() {
     const { screen } = this.props;
-    const screenInfo = Navigation[screen] || Navigation.PARKING_MAP;
+    const screenInfo = Navigation[screen] || Navigation.HOME;
     const { title, navigationId } = screenInfo;
 
     return (
       <div className="App">
         <AppBar title={title} />
-        <Container>
+        <Container displayBottomNav={navigationId !== -1}>
           <Screen name={this.props.screen} />
         </Container>
         <BottomNavigation navigationId={navigationId} />
@@ -103,4 +118,3 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps)(AppUI);
-
