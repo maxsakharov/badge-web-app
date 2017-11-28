@@ -243,7 +243,8 @@ export default class ParkingMap extends Component {
   }
 
   fetchParkingData = () => {
-    fetch('http://geohub.lacity.org/datasets/be7c8c4ab95b4d82af18255ad1a3212c_2.geojson')
+    // using local copy because http://geohub.lacity.org/datasets/be7c8c4ab95b4d82af18255ad1a3212c_2.geojson has certificate issues
+    fetch('https://d3hz1uapz3a9y3.cloudfront.net/City_Owned_Parking_Lots.json')
       .then(response => response.json()
         .then((json) => {
           const { coordinates } = this.state;
@@ -273,7 +274,7 @@ export default class ParkingMap extends Component {
               selectedMarker: closestParking.marker,
             });
           }
-        }));
+        })).catch(error => console.error(error));
   }
 
   selectParking = (marker) => {
