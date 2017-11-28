@@ -138,7 +138,7 @@ export default class ParkingMap extends Component {
 
   getMapsUrl = (marker) => {
     if (marker && marker.properties) {
-      return `https://www.google.com/maps/dir/?api=1&destination=${marker.properties.Lat},${marker.properties.Lon}`;
+      return `https://maps.apple.com/?daddr=${marker.properties.Lat},${marker.properties.Lon}`;
     }
     return null;
   }
