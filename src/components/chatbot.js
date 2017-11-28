@@ -19,6 +19,10 @@ const styles = theme => ({
     width: '100%',
     height: '100%',
   },
+  image: {
+    width: '100%',
+    transform: 'translateY(-50px)',
+  },
   formContainer: {
     display: 'flex',
     flexWrap: 'wrap',
@@ -68,7 +72,7 @@ class Chatbot extends Component {
 
     return (
       <div className={classes.container}>
-        <img src="honda_1.gif" width="100%" />
+        <img src="honda_1.gif" className={classes.image} />
         <div className={classes.formContainer}>
           <FormControl className={classes.formControl}>
             <InputLabel
