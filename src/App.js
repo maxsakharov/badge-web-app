@@ -67,12 +67,12 @@ Container.defaultProps = {
   displayBottomNav: true,
 };
 
-function Screen({ name }) {
+function Screen({ name, ...props }) {
   switch (name) {
     case Navigation.BADGES_LIST.id:
       return <BadgesList />;
     case Navigation.PARKING_MAP.id:
-      return <ParkingMap />;
+      return <ParkingMap {...props} />;
     case Navigation.BADGE_UPLOAD_FORM.id:
       return <BadgeUploadForm />;
     case 'PARKING_RECEIPT':
@@ -89,14 +89,16 @@ Screen.propTypes = {
 class AppUI extends Component {
   static propTypes = {
     screen: PropTypes.string,
+    location: PropTypes.string,
   }
 
   static defaultProps = {
     screen: '',
+    location: '',
   }
 
   render() {
-    const { screen } = this.props;
+    const { screen, location } = this.props;
     const screenInfo = Navigation[screen] || Navigation.HOME;
     const { title, navigationId } = screenInfo;
 
@@ -104,7 +106,7 @@ class AppUI extends Component {
       <div className="App">
         <AppBar title={title} />
         <Container displayBottomNav={navigationId !== -1}>
-          <Screen name={this.props.screen} />
+          <Screen name={screen} location={location} />
         </Container>
         <BottomNavigation navigationId={navigationId} />
         <ReceiptNotificaton />
@@ -115,6 +117,7 @@ class AppUI extends Component {
 
 const mapStateToProps = state => ({
   screen: state.app.screen,
+  location: state.app.location,
 });
 
 export default connect(mapStateToProps)(AppUI);

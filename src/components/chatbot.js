@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import IconButton from 'material-ui/IconButton';
 import SendIcon from 'material-ui-icons/Send';
@@ -6,6 +7,8 @@ import { withStyles } from 'material-ui/styles';
 import Input, { InputLabel } from 'material-ui/Input';
 import { FormControl } from 'material-ui/Form';
 import purple from 'material-ui/colors/purple';
+import { connect } from 'react-redux';
+import { searchParking } from '../actions/actions';
 
 const styles = theme => ({
   container: {
@@ -43,9 +46,21 @@ const styles = theme => ({
   },
 });
 
-class BadgesList extends Component {
+class Chatbot extends Component {
   static propTypes = {
     classes: PropTypes.object.isRequired,
+    showParkingOptions: PropTypes.func.isRequired,
+  }
+
+  search = (e) => {
+    e.preventDefault();
+
+    const input = document.getElementById('location-input');
+    if (!(input && input.value)) return;
+
+    const { showParkingOptions } = this.props;
+    console.log('@@@', input.value);
+    showParkingOptions(input.value);
   }
 
   render() {
@@ -60,7 +75,7 @@ class BadgesList extends Component {
               FormControlClasses={{
                 focused: classes.inputLabelFocused,
               }}
-              htmlFor="question-input"
+              htmlFor="location-input"
             >
               Ask a Question
             </InputLabel>
@@ -68,10 +83,11 @@ class BadgesList extends Component {
               classes={{
                 inkbar: classes.inputInkbar,
               }}
-              id="question-input"
+              id="location-input"
+              ref={(input) => { this.input = input; }}
             />
           </FormControl>
-          <IconButton color="primary" className={classes.button} aria-label="Find">
+          <IconButton color="primary" className={classes.button} aria-label="Find" onClick={this.search}>
             <SendIcon />
           </IconButton>
         </div>
@@ -80,4 +96,11 @@ class BadgesList extends Component {
   }
 }
 
-export default withStyles(styles)(BadgesList);
+const mapDispatchToProps = dispatch => ({
+  showParkingOptions: location => dispatch(searchParking(location)),
+});
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(withStyles(styles)(Chatbot));
