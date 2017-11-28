@@ -73,7 +73,7 @@ class BadgesList extends Component {
     return this.state.badges && this.state.badges.map(badge => (
       <Card key={badge.id} className={classes.card}>
         <CardContent className={classes.cardContent}>
-          <img src={badge.location} width="356" />
+          <img src={badge.location} width="100%" />
         </CardContent>
         {
         // <CardActions className={classes.cardActions}>

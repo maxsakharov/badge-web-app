@@ -1,7 +1,35 @@
 import React, { Component } from 'react';
-import './badge-upload-form.css';
+import PropTypes from 'prop-types';
+import Button from 'material-ui/Button';
+import Camera from 'material-ui-icons/Camera';
+import FileUpload from 'material-ui-icons/FileUpload';
+import { withStyles } from 'material-ui/styles';
 
-export default class BadgeUploadForm extends Component {
+const styles = theme => ({
+  badgeUploadForm: {
+    minHeight: 300,
+    padding: 20,
+  },
+  imagePreview: {
+    margin: 10,
+    width: '80%',
+  },
+  button: {
+    margin: theme.spacing.unit,
+  },
+  leftIcon: {
+    marginRight: theme.spacing.unit,
+  },
+  rightIcon: {
+    marginLeft: theme.spacing.unit,
+  },
+});
+
+class BadgeUploadForm extends Component {
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -43,13 +71,42 @@ export default class BadgeUploadForm extends Component {
   }
 
   render() {
+    const { classes } = this.props;
     const { file } = this.state;
 
     return (
-      <div className="badge-upload-form">
-        <input type="file" onChange={e => this.selectFile(e)} />
-        <img className="image-preview" src={file} />
+      <div className={classes.badgeUploadForm}>
+        <Button
+          className={classes.button}
+          raised
+          id="raised-button-file"
+          component="label"
+          color="primary"
+          label="Ticket"
+        >
+          {file
+            ? [
+              <span key="label">Upload Ticket</span>,
+              <FileUpload key="icon" className={classes.rightIcon} />,
+            ]
+            : [
+              <span key="label">Select Ticket</span>,
+              <Camera key="icon" className={classes.rightIcon} />,
+              <input
+                key="file"
+                accept="image/*"
+                type="file"
+                style={{ display: 'none' }}
+                onChange={e => this.selectFile(e)}
+              />,
+            ]
+          }
+        </Button>
+
+        <img className={classes.imagePreview} src={file} />
       </div>
     );
   }
 }
+
+export default withStyles(styles)(BadgeUploadForm);
