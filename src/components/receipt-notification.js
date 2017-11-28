@@ -54,7 +54,7 @@ class ReceiptNotificaton extends Component {
       receiptAvailable: false,
     });
 
-    fetch('//badges/receipts/', { method: 'DELETE' });
+    fetch('//52.4.240.117:8080/receipt', { method: 'DELETE' });
   }
 
   render() {
