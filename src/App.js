@@ -7,6 +7,8 @@ import BadgeUploadForm from './components/badge-upload-form';
 import ParkingMap from './components/parking-map';
 import AppBar from './components/app-top-bar';
 import BottomNavigation from './components/app-bottom-navigation';
+import ReceiptNotificaton from './components/receipt-notification';
+import ParkingReceipt from './components/parking-receipt';
 import './App.css';
 
 const Navigation = {
@@ -59,6 +61,8 @@ function Screen({ name }) {
       return <BadgeUploadForm />;
     case Navigation.PARKING_MAP.id:
       return <ParkingMap />;
+    case 'PARKING_RECEIPT':
+      return <ParkingReceipt />;
     default:
       return <div />;
   }
@@ -89,6 +93,7 @@ class AppUI extends Component {
           <Screen name={this.props.screen} />
         </Container>
         <BottomNavigation navigationId={navigationId} />
+        <ReceiptNotificaton />
       </div>
     );
   }

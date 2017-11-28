@@ -135,6 +135,13 @@ export default class ParkingMap extends Component {
     return marker.properties.HourlyCost;
   }
 
+  getMapsUrl = (marker) => {
+    if (marker && marker.properties) {
+      return `https://www.google.com/maps/dir/?api=1&destination=${marker.properties.Lat},${marker.properties.Lon}`;
+    }
+    return null;
+  }
+
   fetchParkingData = () => {
     fetch('http://geohub.lacity.org/datasets/be7c8c4ab95b4d82af18255ad1a3212c_2.geojson')
       .then(response => response.json()
@@ -193,7 +200,8 @@ export default class ParkingMap extends Component {
         <div key="map-info-container" className="map-info-container">
           {reservedMarker &&
             <div className="confirmation">
-              The parking is reserved! Have a nice day! :)
+              <p>The parking is reserved! Have a nice day! :)</p>
+              <Button raised color="primary" target="_blank" href={this.getMapsUrl(reservedMarker)}>Navigate</Button>
             </div>
           }
           {!selectedMarker && !reservedMarker &&
