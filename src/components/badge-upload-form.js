@@ -50,8 +50,8 @@ class BadgeUploadForm extends Component {
     formData.append('lat', latitude);
     formData.append('long', longitude);
 
-    fetch('//52.4.240.117:8080/badge', {
-    // fetch('https://ziclu0yj8h.execute-api.us-east-1.amazonaws.com/honda2/badge-proxy', {
+    // fetch('//52.4.240.117:8080/badge', {
+    fetch('//degratnik-prod.apigee.net/badgeparkingapi/badge', {
       method: 'POST',
       body: formData,
     })

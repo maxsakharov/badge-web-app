@@ -54,8 +54,8 @@ class ReceiptNotificaton extends Component {
       receiptAvailable: false,
     });
 
-    fetch('//52.4.240.117:8080/receipt', { method: 'DELETE' });
-    // fetch('https://ziclu0yj8h.execute-api.us-east-1.amazonaws.com/honda2/receipt-proxy', { method: 'DELETE' });
+    // fetch('//52.4.240.117:8080/receipt', { method: 'DELETE' });
+    fetch('//degratnik-prod.apigee.net/badgeparkingapi/receipt', { method: 'DELETE' });
   }
 
   render() {
