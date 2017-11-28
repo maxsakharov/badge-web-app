@@ -7,6 +7,47 @@ import { compose, withProps } from 'recompose';
 import { withScriptjs, withGoogleMap, GoogleMap, Marker, TrafficLayer } from 'react-google-maps';
 import './parking-map.css';
 
+// Parkings for demo purpose
+const PRE_DEFINED_PARKINGS = [
+  {
+    type: 'Feature',
+    properties: {
+      ID: 10000,
+      FacilityID: '',
+      LotName: '',
+      Community: '',
+      CD: '',
+      Address: '1201 S Figueroa St',
+      City: 'Los Angeles',
+      State: 'CA',
+      Zipcode: '90015',
+      Lat: 34.043249,
+      Lon: -118.269796,
+      ConvenientTo: '',
+      Entrance: '',
+      Operator: '',
+      Type: 'Operated',
+      Phone: '',
+      Hours: '',
+      HourlyCost: 'See rates under Special Features',
+      DailyCost: '',
+      MonthlyCost: '',
+      SpecialFeatures: '$25 Daily',
+      Spaces: '',
+      Status: 'Operational',
+      TOOLTIP: '',
+      NLA_URL: '',
+    },
+    geometry: {
+      type: 'Point',
+      coordinates: [
+        -118.269796,
+        34.043249,
+      ],
+    },
+  },
+];
+
 function formatPrice(price) {
   return price && price.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 }
@@ -209,7 +250,12 @@ export default class ParkingMap extends Component {
             // return parkings in 2 miles radius
             const maxDistance = 2;
             let closestParking = { marker: null, distance: 10000 };
-            const closeParkings = features.filter((feature) => {
+            // Add pre-defined parkings for demo purpose
+            let allParkings = features;
+            if (PRE_DEFINED_PARKINGS && PRE_DEFINED_PARKINGS.length) {
+              allParkings = allParkings.concat(PRE_DEFINED_PARKINGS);
+            }
+            const closeParkings = allParkings.filter((feature) => {
               const coord = feature.geometry.coordinates;
               const distance = getDistanceFromLatLonInMi(coord[1], coord[0], coordinates.latitude, coordinates.longitude);
               if (closestParking.distance > distance && distance <= maxDistance) {
