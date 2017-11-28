@@ -33,7 +33,7 @@ const badgesMock = [
     name: 'test',
     lat: '51.5033640',
     long: '-0.1276250',
-    location: 'https://s3.amazonaws.com/badge-files-dev/badge-image/default',
+    location: '//s3.amazonaws.com/badge-files-dev/badge-image/default',
     created_at: '2017-11-27T21:43:09.976Z',
   },
 ];
@@ -52,7 +52,7 @@ class BadgesList extends Component {
   }
 
   fetchBadges = () => {
-    fetch('http://52.4.240.117:8080/badge')
+    fetch('//52.4.240.117:8080/badge')
       .then(response => response.json())
       .then((badges) => {
         this.setState({
@@ -73,7 +73,7 @@ class BadgesList extends Component {
     return this.state.badges && this.state.badges.map(badge => (
       <Card key={badge.id} className={classes.card}>
         <CardContent className={classes.cardContent}>
-          <img src={badge.location} width="356" />
+          <img src={badge.location} width="100%" />
         </CardContent>
         {
         // <CardActions className={classes.cardActions}>
