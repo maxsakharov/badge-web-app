@@ -11,8 +11,8 @@ Currently available at https://d3hz1uapz3a9y3.cloudfront.net/
 
 ## Prerequisites
 
-Node v8.9.1 https://nodejs.org/en/
-Yarn v1.3.2 https://yarnpkg.com/en/docs/install
+* Node v8.9.1 https://nodejs.org/en/
+* Yarn v1.3.2 https://yarnpkg.com/en/docs/install
 
 ## Available Scripts
 
