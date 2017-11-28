@@ -27,8 +27,13 @@
   width: 300px;
 }
 
+.map-info-container .parking-rate {
+  font-weight: bold;
+}
+
 .map-info-container .parking-address {
   color: gray;
+  font-size: 14px;
 }
 
 .map-info-container .confirmation {

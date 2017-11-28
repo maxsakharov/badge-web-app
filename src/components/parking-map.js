@@ -28,6 +28,12 @@ function getDistanceFromLatLonInMi(lat1, lon1, lat2, lon2) {
   return d;
 }
 
+const iconBase = '//maps.google.com/mapfiles/kml/paddle/';
+const icons = {
+  default: `${iconBase}red-circle.png`,
+  selected: `${iconBase}purple-diamond.png`,
+};
+
 const GoogleMapHoc = compose(
   withProps({
     googleMapURL: '//maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places',
@@ -43,22 +49,50 @@ const GoogleMapHoc = compose(
     center={{ lat: props.coordinates.latitude, lng: props.coordinates.longitude }}
   >
     <TrafficLayer autoUpdate />
-    <ParkingInfoLayer markers={props.markers} onParkingSelect={props.onParkingSelect} />
+    <ParkingInfoLayer markers={props.markers} selectedMarker={props.selectedMarker} onParkingSelect={props.onParkingSelect} />
   </GoogleMap>
 ));
 
 class ParkingInfoLayer extends Component {
   static propTypes = {
     markers: PropTypes.arrayOf(PropTypes.object),
+    selectedMarker: PropTypes.object,
     onParkingSelect: PropTypes.func,
   }
 
   static defaultProps = {
     markers: [],
+    selectedMarker: null,
     onParkingSelect: null,
   }
 
+  state = {
+    selectedMarker: null,
+  }
+
+  componentWillMount() {
+    this.setState({
+      selectedMarker: this.props.selectedMarker,
+    });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      selectedMarker: nextProps.selectedMarker,
+    });
+  }
+
   onMarkerClick(marker) {
+    const { selectedMarker } = this.state;
+    // To avoid re-rendering when same marker is selected
+    if (selectedMarker && selectedMarker === marker) {
+      return;
+    }
+
+    this.setState({
+      selectedMarker: marker,
+    });
+
     const { onParkingSelect } = this.props;
     if (onParkingSelect) {
       onParkingSelect(marker);
@@ -74,6 +108,7 @@ class ParkingInfoLayer extends Component {
   */
 
   render() {
+    const { selectedMarker } = this.state;
     const { markers } = this.props;
 
     return markers.map(marker => (
@@ -81,6 +116,7 @@ class ParkingInfoLayer extends Component {
         key={`marker.${marker.properties.ID}`}
         position={{ lat: marker.properties.Lat, lng: marker.properties.Lon }}
         onClick={() => this.onMarkerClick(marker)}
+        icon={(selectedMarker && selectedMarker === marker) ? icons.selected : icons.default}
       >
         {/*
           selectedMarker && selectedMarker.properties.ID === marker.properties.ID &&
@@ -99,6 +135,14 @@ class ParkingInfoLayer extends Component {
 }
 
 export default class ParkingMap extends Component {
+  static propTypes = {
+    location: PropTypes.string,
+  }
+
+  static defaultProps = {
+    location: null,
+  }
+
   state = {
     markers: [],
     coordinates: {
@@ -109,24 +153,19 @@ export default class ParkingMap extends Component {
     reservedMarker: null,
   }
 
+  componentDidMount() {
+    const { location } = this.props;
+    if (location) {
+      document.forms['map-form'].elements['map-input-field'].value = location;
+      this.fetchLocationData(location);
+    }
+  }
+
   onSearchFieldChange = (e) => {
     e.preventDefault();
 
     const value = e.target.elements['map-input-field'].value;
-    fetch(`//maps.googleapis.com/maps/api/geocode/json?address=${value}`)
-      .then(response => response.json()
-        .then((json) => {
-          if (json && json.results && json.results.length && json.results[0].geometry && json.results[0].geometry.location) {
-            const location = json.results[0].geometry.location;
-            this.setState({
-              coordinates: {
-                latitude: location.lat,
-                longitude: location.lng,
-              },
-            });
-            this.fetchParkingData();
-          }
-        }));
+    this.fetchLocationData(value);
   }
 
   getDailyRate = (marker) => {
@@ -143,22 +182,48 @@ export default class ParkingMap extends Component {
     return null;
   }
 
+  fetchLocationData = (location) => {
+    fetch(`//maps.googleapis.com/maps/api/geocode/json?address=${location}`)
+      .then(response => response.json()
+        .then((json) => {
+          if (json && json.results && json.results.length && json.results[0].geometry && json.results[0].geometry.location) {
+            const result = json.results[0].geometry.location;
+            this.setState({
+              coordinates: {
+                latitude: result.lat,
+                longitude: result.lng,
+              },
+            });
+            this.fetchParkingData();
+          }
+        }));
+  }
+
   fetchParkingData = () => {
     fetch('//geohub.lacity.org/datasets/be7c8c4ab95b4d82af18255ad1a3212c_2.geojson')
       .then(response => response.json()
         .then((json) => {
-          console.log(json);
           const { coordinates } = this.state;
           if (json && json.features && json.features.length) {
             const { features } = json;
+            // return parkings in 2 miles radius
+            const maxDistance = 2;
+            let closestParking = { marker: null, distance: 10000 };
             const closeParkings = features.filter((feature) => {
               const coord = feature.geometry.coordinates;
-              return getDistanceFromLatLonInMi(coord[1], coord[0], coordinates.latitude, coordinates.longitude) <= 2;
+              const distance = getDistanceFromLatLonInMi(coord[1], coord[0], coordinates.latitude, coordinates.longitude);
+              if (closestParking.distance > distance && distance <= maxDistance) {
+                closestParking = {
+                  marker: feature,
+                  distance,
+                };
+              }
+              return distance <= maxDistance;
             });
             this.setState({
               markers: closeParkings,
+              selectedMarker: closestParking.marker,
             });
-            console.log(closeParkings);
           }
         }));
   }
@@ -194,7 +259,7 @@ export default class ParkingMap extends Component {
 
     return [coordinates && (
       <div key="map-container" className="map-container">
-        <GoogleMapHoc coordinates={coordinates} markers={markers} onParkingSelect={this.selectParking} />
+        <GoogleMapHoc coordinates={coordinates} markers={markers} selectedMarker={selectedMarker} onParkingSelect={this.selectParking} />
       </div>
       ),
       (
@@ -208,7 +273,7 @@ export default class ParkingMap extends Component {
             </Card>
           }
           {!selectedMarker && !reservedMarker &&
-            <form key="map-form" onSubmit={this.onSearchFieldChange}>
+            <form id="map-form" key="map-form" onSubmit={this.onSearchFieldChange}>
               <TextField id="map-input-field" className="map-input-field" key="map-input-field" placeholder="Search by city, venue, zip code" />
             </form>
           }
