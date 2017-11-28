@@ -39,6 +39,7 @@ class BadgeUploadForm extends Component {
     fileSrc: null,
     uploading: false,
     uploaded: false,
+    error: null,
   }
 
   getCurrentPositionSuccess = (position) => {
@@ -50,23 +51,31 @@ class BadgeUploadForm extends Component {
     formData.append('long', longitude);
 
     fetch('//52.4.240.117:8080/badge', {
+    // fetch('https://ziclu0yj8h.execute-api.us-east-1.amazonaws.com/honda2/badge-proxy', {
       method: 'POST',
       body: formData,
-    }).then((response) => {
-      // TODO proper response handling - display badge info etc.
-      console.log(`The badge was ${response.ok === true ? '' : 'NOT'} uploaded successfully`);
-    }).catch(() => {
-      // TODO proper handling
-      console.log('Error');
-    }).then(() => {
-      this.setState({
-        uploading: false,
-        uploaded: true,
+    })
+      .then((response) => {
+        // TODO proper response handling - display badge info etc.
+        console.log(`The badge was ${response.ok === true ? '' : 'NOT'} uploaded successfully`);
+      })
+      .catch(this.error)
+      .then(() => {
+        this.setState({
+          uploading: false,
+          uploaded: true,
+        });
       });
-    });
   }
 
-  error = error => console.log(error);
+  error = (error) => {
+    console.error('Error', error);
+    this.setState({
+      error,
+      uploading: false,
+      uploaded: false,
+    });
+  }
 
   uploadFile = (e) => {
     e.preventDefault();
@@ -94,7 +103,15 @@ class BadgeUploadForm extends Component {
 
   render() {
     const { classes } = this.props;
-    const { fileSrc, uploading, uploaded } = this.state;
+    const { fileSrc, uploading, uploaded, error } = this.state;
+
+    if (error) {
+      return (
+        <div className={classes.badgeUploadForm}>
+          {error.message || 'Error, please try again later.'};
+        </div>
+      );
+    }
 
     return (
       <div className={classes.badgeUploadForm}>

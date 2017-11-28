@@ -55,6 +55,7 @@ class ReceiptNotificaton extends Component {
     });
 
     fetch('//52.4.240.117:8080/receipt', { method: 'DELETE' });
+    // fetch('https://ziclu0yj8h.execute-api.us-east-1.amazonaws.com/honda2/receipt-proxy', { method: 'DELETE' });
   }
 
   render() {

@@ -53,6 +53,7 @@ class BadgesList extends Component {
 
   fetchBadges = () => {
     fetch('//52.4.240.117:8080/badge')
+    // fetch('https://ziclu0yj8h.execute-api.us-east-1.amazonaws.com/honda2/badge-proxy')
       .then(response => response.json())
       .then((badges) => {
         this.setState({
@@ -70,7 +71,11 @@ class BadgesList extends Component {
   render() {
     const { classes } = this.props;
 
-    return this.state.badges && this.state.badges.map(badge => (
+    if (!(this.state.badges && this.state.badges.map)) {
+      return null;
+    }
+
+    return this.state.badges.map(badge => (
       <Card key={badge.id} className={classes.card}>
         <CardContent className={classes.cardContent}>
           <img src={badge.location} width="100%" />
