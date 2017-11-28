@@ -40,7 +40,7 @@ class AppBottomNavigation extends React.Component {
       >
         <BottomNavigationButton label="Permits" icon={<Receipt />} onClick={openBadgesList} />
         <BottomNavigationButton label="Search Parking" icon={<Search />} onClick={openParkingMap} />
-        <BottomNavigationButton label="Ticket Scan" icon={<Camera />} onClick={openBadgeUploadForm} />
+        <BottomNavigationButton label="Permit Scan" icon={<Camera />} onClick={openBadgeUploadForm} />
       </BottomNavigation>
     );
   }

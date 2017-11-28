@@ -63,7 +63,6 @@ class Chatbot extends Component {
     if (!(input && input.value)) return;
 
     const { showParkingOptions } = this.props;
-    console.log('@@@', input.value);
     showParkingOptions(input.value);
   }
 
