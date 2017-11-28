@@ -48,6 +48,8 @@ const PRE_DEFINED_PARKINGS = [
   },
 ];
 
+const GOOGLE_MAP_API_LEY = 'AIzaSyDvlf6IlT554uH3eqUZEpu1lAVxDV4C-Us';
+
 function formatPrice(price) {
   return price && price.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 }
@@ -77,7 +79,7 @@ const icons = {
 
 const GoogleMapHoc = compose(
   withProps({
-    googleMapURL: '//maps.googleapis.com/maps/api/js?key=AIzaSyDvlf6IlT554uH3eqUZEpu1lAVxDV4C-Us&v=3.exp&libraries=geometry,drawing,places',
+    googleMapURL: `//maps.googleapis.com/maps/api/js?key=${GOOGLE_MAP_API_LEY}&v=3.exp&libraries=geometry,drawing,places`,
     loadingElement: <div style={{ height: '100%' }} />,
     containerElement: <div style={{ height: '400px' }} />,
     mapElement: <div style={{ height: '100%' }} />,
@@ -224,7 +226,7 @@ export default class ParkingMap extends Component {
   }
 
   fetchLocationData = (location) => {
-    fetch(`//maps.googleapis.com/maps/api/geocode/json?address=${location}`)
+    fetch(`//maps.googleapis.com/maps/api/geocode/json?key=${GOOGLE_MAP_API_LEY}&address=${location}`)
       .then(response => response.json()
         .then((json) => {
           if (json && json.results && json.results.length && json.results[0].geometry && json.results[0].geometry.location) {
