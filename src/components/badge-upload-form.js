@@ -49,7 +49,7 @@ class BadgeUploadForm extends Component {
     formData.append('lat', latitude);
     formData.append('long', longitude);
 
-    fetch('http://52.4.240.117:8080/badge', {
+    fetch('//52.4.240.117:8080/badge', {
       method: 'POST',
       body: formData,
     }).then((response) => {

@@ -17,19 +17,19 @@ function deg2rad(deg) {
 function getDistanceFromLatLonInMi(lat1, lon1, lat2, lon2) {
   const R = 3959; // Radius of the earth in km
   const dLat = deg2rad(lat2-lat1);  // deg2rad below
-  const dLon = deg2rad(lon2-lon1); 
-  const a = 
+  const dLon = deg2rad(lon2-lon1);
+  const a =
     Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
-    Math.sin(dLon/2) * Math.sin(dLon/2); 
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+    Math.sin(dLon/2) * Math.sin(dLon/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
   const d = R * c; // Distance in km
   return d;
 }
 
 const GoogleMapHoc = compose(
   withProps({
-    googleMapURL: 'https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places',
+    googleMapURL: '//maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places',
     loadingElement: <div style={{ height: '100%' }} />,
     containerElement: <div style={{ height: '400px' }} />,
     mapElement: <div style={{ height: '100%' }} />,
@@ -112,7 +112,7 @@ export default class ParkingMap extends Component {
     e.preventDefault();
 
     const value = e.target.elements['map-input-field'].value;
-    fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${value}`)
+    fetch(`//maps.googleapis.com/maps/api/geocode/json?address=${value}`)
       .then(response => response.json()
         .then((json) => {
           if (json && json.results && json.results.length && json.results[0].geometry && json.results[0].geometry.location) {
@@ -136,7 +136,7 @@ export default class ParkingMap extends Component {
   }
 
   fetchParkingData = () => {
-    fetch('http://geohub.lacity.org/datasets/be7c8c4ab95b4d82af18255ad1a3212c_2.geojson')
+    fetch('//geohub.lacity.org/datasets/be7c8c4ab95b4d82af18255ad1a3212c_2.geojson')
       .then(response => response.json()
         .then((json) => {
           console.log(json);
