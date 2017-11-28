@@ -1,0 +1,29 @@
+.map-container {
+  margin: 0px;
+  padding: 0px;
+}
+
+.map-info-container {
+  padding: 20px;
+}
+
+.map-info-container .map-input-field {
+    width: 300px;
+}
+
+.map-info-container .parking-address {
+    color: gray;
+}
+
+.map-info-container .truncated {
+    width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.map-info-container .confirmation {
+    margin: 40px;
+    color: green;
+    font-size: 22px;
+}
