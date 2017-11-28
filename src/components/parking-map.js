@@ -224,7 +224,7 @@ export default class ParkingMap extends Component {
   }
 
   fetchLocationData = (location) => {
-    fetch(`http://maps.googleapis.com/maps/api/geocode/json?address=${location}`)
+    fetch(`//maps.googleapis.com/maps/api/geocode/json?address=${location}`)
       .then(response => response.json()
         .then((json) => {
           if (json && json.results && json.results.length && json.results[0].geometry && json.results[0].geometry.location) {
@@ -241,7 +241,7 @@ export default class ParkingMap extends Component {
   }
 
   fetchParkingData = () => {
-    fetch('//geohub.lacity.org/datasets/be7c8c4ab95b4d82af18255ad1a3212c_2.geojson')
+    fetch('http://geohub.lacity.org/datasets/be7c8c4ab95b4d82af18255ad1a3212c_2.geojson')
       .then(response => response.json()
         .then((json) => {
           const { coordinates } = this.state;
