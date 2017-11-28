@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
+import Card, { CardContent } from 'material-ui/Card';
 
 const styles = theme => ({
   image: {
@@ -39,9 +40,11 @@ class ParkingReceipt extends Component {
 
     const { classes } = this.props;
     return (
-      <div>
-        <img src={image} className={classes.image} alt="Receipt" />
-      </div>
+      <Card>
+        <CardContent>
+            <img src={image} className={classes.image} alt="Receipt" />
+        </CardContent>
+      </Card>
     );
   }
 }

@@ -68,7 +68,7 @@ class ReceiptNotificaton extends Component {
       open
       message={<span id="message-id">Parking Receipt Available</span>}
       action={[
-        <Button key="view-receipt" color="contrast" onClick={this.props.viewReceipt}>View</Button>,
+        <Button key="view-receipt" color="accent" onClick={this.props.viewReceipt}>View</Button>,
         <IconButton
           key="close"
           aria-label="Close"
