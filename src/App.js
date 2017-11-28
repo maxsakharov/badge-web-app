@@ -59,12 +59,11 @@ function Screen({ name }) {
       return <BadgesList />;
     case Navigation.BADGE_UPLOAD_FORM.id:
       return <BadgeUploadForm />;
-    case Navigation.PARKING_MAP.id:
-      return <ParkingMap />;
     case 'PARKING_RECEIPT':
       return <ParkingReceipt />;
+    case Navigation.PARKING_MAP.id:
     default:
-      return <div />;
+      return <ParkingMap />;
   }
 }
 
@@ -83,7 +82,7 @@ class AppUI extends Component {
 
   render() {
     const { screen } = this.props;
-    const screenInfo = Navigation[screen] || Navigation.HOME;
+    const screenInfo = Navigation[screen] || Navigation.PARKING_MAP;
     const { title, navigationId } = screenInfo;
 
     return (

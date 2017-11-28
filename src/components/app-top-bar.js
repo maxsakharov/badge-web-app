@@ -31,9 +31,11 @@ function AppTopBar(props) {
     <div className={classes.root}>
       <AppBar position="fixed" color="default">
         <Toolbar>
-          <IconButton className={classes.homeButton} aria-label="Home" onClick={openHome}>
-            <HomeIcon color="inherit" />
-          </IconButton>
+          {
+          // <IconButton className={classes.homeButton} aria-label="Home" onClick={openHome}>
+          //   <HomeIcon color="inherit" />
+          // </IconButton>
+          }
           <Typography type="title" color="inherit" className={classes.title}>
             {title}
           </Typography>
