@@ -80,7 +80,7 @@ class Chatbot extends Component {
               }}
               htmlFor="location-input"
             >
-              Ask a Question
+              Where are you going?
             </InputLabel>
             <Input
               classes={{
