@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import 'typeface-roboto'; // eslint-disable-line import/extensions
+import Chatbot from './components/chatbot';
 import BadgesList from './components/badges-list';
 import BadgeUploadForm from './components/badge-upload-form';
 import ParkingMap from './components/parking-map';
@@ -15,7 +16,7 @@ const Navigation = {
   HOME: {
     id: 'HOME',
     navigationId: -1,
-    title: 'Parking Concierge',
+    title: 'Chatbot',
   },
   BADGES_LIST: {
     id: 'BADGES_LIST',
@@ -38,9 +39,17 @@ const style = {
   },
 };
 
-function Container({ children }) {
+function Container({ children, displayBottomNav }) {
+  const contentStyle = Object.assign(
+    {},
+    style.content,
+    {
+      bottom: displayBottomNav ? '56px' : '0px',
+    }
+  );
+
   return (
-    <div style={style.content}>
+    <div style={contentStyle}>
       {children}
     </div>
   );
@@ -51,19 +60,25 @@ Container.propTypes = {
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node,
   ]).isRequired,
+  displayBottomNav: PropTypes.bool,
 };
 
-function Screen({ name }) {
+Container.defaultProps = {
+  displayBottomNav: true,
+};
+
+function Screen({ name, ...props }) {
   switch (name) {
     case Navigation.BADGES_LIST.id:
       return <BadgesList />;
+    case Navigation.PARKING_MAP.id:
+      return <ParkingMap {...props} />;
     case Navigation.BADGE_UPLOAD_FORM.id:
       return <BadgeUploadForm />;
     case 'PARKING_RECEIPT':
       return <ParkingReceipt />;
-    case Navigation.PARKING_MAP.id:
     default:
-      return <ParkingMap />;
+      return <Chatbot />;
   }
 }
 
@@ -74,22 +89,24 @@ Screen.propTypes = {
 class AppUI extends Component {
   static propTypes = {
     screen: PropTypes.string,
+    location: PropTypes.string,
   }
 
   static defaultProps = {
     screen: '',
+    location: '',
   }
 
   render() {
-    const { screen } = this.props;
-    const screenInfo = Navigation[screen] || Navigation.PARKING_MAP;
+    const { screen, location } = this.props;
+    const screenInfo = Navigation[screen] || Navigation.HOME;
     const { title, navigationId } = screenInfo;
 
     return (
       <div className="App">
         <AppBar title={title} />
-        <Container>
-          <Screen name={this.props.screen} />
+        <Container displayBottomNav={navigationId !== -1}>
+          <Screen name={screen} location={location} />
         </Container>
         <BottomNavigation navigationId={navigationId} />
         <ReceiptNotificaton />
@@ -100,7 +117,7 @@ class AppUI extends Component {
 
 const mapStateToProps = state => ({
   screen: state.app.screen,
+  location: state.app.location,
 });
 
 export default connect(mapStateToProps)(AppUI);
-

@@ -28,6 +28,10 @@ class AppBottomNavigation extends React.Component {
   render() {
     const { navigationId, classes, openBadgesList, openParkingMap, openBadgeUploadForm } = this.props;
 
+    if (navigationId === -1) {
+      return null;
+    }
+
     return (
       <BottomNavigation
         value={navigationId}
